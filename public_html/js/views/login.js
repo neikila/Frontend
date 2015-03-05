@@ -5,13 +5,12 @@ define([
     Backbone,
     tmpl
 ){
-
     var Login = Backbone.View.extend({
         el: $("#page"),
         template: tmpl,
         events: { 
-                  "change input:password": "chekLogin",
-                  "change input:text": "chekLogin",                    
+                  "input input": "chekLogin",
+                  "submit form": "submitForm"                  
         },
         initialize: function () {
             // this.listenTo(this.collection, "change", this.render);
@@ -29,45 +28,49 @@ define([
         chekLogin: function () {
 
             var mail = $(this.el).find("#email").val()
-            var mail_pattern=/[0-9a-z_]+@[0-9a-z_]+\.[a-z]{2,5}/i; 
-            var isItCorrectlyMail=mail_pattern.test(mail);
+            var mail_pattern = /[0-9a-z_]+@[0-9a-z_]+\.[a-z]{2,5}/i; 
+            var isItCorrectlyMail =mail_pattern.test(mail);
 
             var password = $(this.el).find("input:password").val();
-            var password_pattern = /[0-9a-z]+/i;
+            var password_pattern = /[\W]/;
             var isItCorrectlyPassword = password_pattern.test(password);
 
             var myLogin = $(this.el).find("#login").val()
-            var myLogin_pattern=/[0-9a-z]+/i; 
-            var isItCorrectlyLogin=myLogin_pattern.test(myLogin);
+            var myLogin_pattern = /[\W]/; 
+            var isItCorrectlyLogin = myLogin_pattern.test(myLogin);
 
 
-            if (isItCorrectlyPassword && isItCorrectlyMail && isItCorrectlyLogin) {
+            if (!isItCorrectlyPassword && isItCorrectlyMail && !isItCorrectlyLogin 
+                && myLogin != "" && password != "" && mail != "") {
                 $(this.el).find('input[type=submit]').prop('disabled', false); 
             } 
             else {
                 $(this.el).find('input[type=submit]').prop('disabled', true);
             } 
             
-            if (isItCorrectlyPassword) {
+            if (!isItCorrectlyPassword | password === "") {
                 $(this.el).find(".label__password").css({'color' : "#FFF"});
             }
             else {
                 $(this.el).find(".label__password").css({'color' : "#FF0000"});
             }
 
-            if (isItCorrectlyLogin) {
+            if (!isItCorrectlyLogin | myLogin === "") {
                 $(this.el).find(".label__login").css({'color' : "#FFF"});
             }
             else {
                 $(this.el).find(".label__login").css({'color' : "#FF0000"});
             }
 
-            if (isItCorrectlyMail) {
+            if (isItCorrectlyMail | mail === "") {
                 $(this.el).find(".label__email").css({'color' : "#FFF"});
             }
             else {
                 $(this.el).find(".label__email").css({'color' : "#FF0000"});
             }
+        },
+        submitForm: function(){
+            //render new template
         }
 
     });
